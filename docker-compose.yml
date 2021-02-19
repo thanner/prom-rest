@@ -1,0 +1,8 @@
+version: "3.9"
+
+services:
+  prom-rest:
+    container_name: prom-rest
+    build: .
+    ports:
+      - "5000:5000"
