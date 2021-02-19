@@ -25,3 +25,13 @@ def list_plugins():
         return jsonify(outputs)
     except Exception as e:
         return str(e)
+
+
+@prom_blueprint.route("/heuristic_miner", methods=['POST'])
+def execute_heuristic_miner():
+    command = "-f prom_scripts/heuristic_miner.txt"
+    try:
+        outputs = execute_command(command)
+        return jsonify(outputs)
+    except Exception as e:
+        return str(e)
