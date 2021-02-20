@@ -1,0 +1,236 @@
+{
+  "info": {
+    "_postman_id": "b7ec19f7-0e43-46e6-a91a-088096ed6fd5",
+    "name": "Prom",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Package Manager",
+      "item": [
+        {
+          "name": "Update Package List",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/package-manager/packages",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "package-manager",
+                "packages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/package-manager/packages",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "package-manager",
+                "packages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Install Packages",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"packages\": [\"ETConformance\", \"HeuristicsMiner\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/package-manager/packages",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "package-manager",
+                "packages"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Package",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"packages\": [\"HeuristicsMiner\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/package-manager/packages",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "package-manager",
+                "packages"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "protocolProfileBehavior": {}
+    },
+    {
+      "name": "Plugins",
+      "item": [
+        {
+          "name": "Heuristic Miner",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "@xesLog",
+                  "type": "file",
+                  "src": "/Users/t/Projects/prom-rest/template_plugin/log.xes"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/prom/execute-plugin/heuristic_miner",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "prom",
+                "execute-plugin",
+                "heuristic_miner"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "protocolProfileBehavior": {}
+    },
+    {
+      "name": "Util",
+      "item": [
+        {
+          "name": "Commands",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"commands\": [\"-l\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/prom/commands",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "prom",
+                "commands"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Installed Plugins",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/prom/installed-plugins",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "prom",
+                "installed-plugins"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "protocolProfileBehavior": {}
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "b067f51e-13f7-45af-a968-e883f794c9c2",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "3799a84c-d644-42ae-800a-c3adb78a5939",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "6b1fad92-26f3-4970-90c6-1cbe78695d6c",
+      "key": "host",
+      "value": "0.0.0.0"
+    },
+    {
+      "id": "dbbe78dd-d608-4c70-ac6f-d86bd267012d",
+      "key": "port",
+      "value": "5000"
+    }
+  ],
+  "protocolProfileBehavior": {}
+}
