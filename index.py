@@ -1,11 +1,29 @@
+from flask import Blueprint
 from flask import Flask
+from flask_pymongo import PyMongo
 
-from src.controller.package_manager_controller import package_manager_blueprint
-from src.controller.prom_controller import prom_blueprint
+from src.controller import package_manager_controller, script_controller, prom_controller
+from src.swagger import api
+from src.util import logger_utils
 
 app = Flask(__name__)
-app.register_blueprint(prom_blueprint, url_prefix="/prom")
-app.register_blueprint(package_manager_blueprint, url_prefix="/package-manager")
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int("5000"), debug=True)
+app.config["MONGO_URI"] = "mongodb://localhost:27017/prom"
+mongo = PyMongo(app)
+
+logger = logger_utils.get_logger()
+
+
+def initialize_server():
+    api_blueprint = Blueprint('api', __name__, url_prefix='/prom')
+    api.init_app(api_blueprint)
+    api.add_namespace(package_manager_controller.ns)
+    api.add_namespace(prom_controller.ns)
+    api.add_namespace(script_controller.ns)
+    app.register_blueprint(api_blueprint)
+    logger.info("Swagger running on http://localhost:5000/prom")
+    app.run()
+
+
+if __name__ == '__main__' or __name__ == 'prom.app':
+    initialize_server()

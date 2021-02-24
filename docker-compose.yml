@@ -1,8 +1,15 @@
 version: "3.9"
 
 services:
-  prom-rest:
-    container_name: prom-rest
+  service:
+    container_name: service
     build: .
     ports:
       - "5000:5000"
+    depends_on:
+      - database
+  database:
+    image: mongo
+    container_name: database
+    ports:
+      - "27017:27017"
