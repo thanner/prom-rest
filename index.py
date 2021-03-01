@@ -2,7 +2,6 @@ from flask import Blueprint
 from flask import Flask
 from flask_pymongo import PyMongo
 
-from src.controller import package_manager_controller, script_controller, prom_controller
 from src.swagger import api
 from src.util import logger_utils
 
@@ -13,12 +12,14 @@ mongo = PyMongo(app)
 
 logger = logger_utils.get_logger()
 
+from src.controller import package_manager_controller, param_controller, prom_controller, script_controller
 
 def initialize_server():
     api_blueprint = Blueprint('api', __name__, url_prefix='/prom')
     api.init_app(api_blueprint)
     api.add_namespace(package_manager_controller.ns)
     api.add_namespace(prom_controller.ns)
+    api.add_namespace(param_controller.ns)
     api.add_namespace(script_controller.ns)
     app.register_blueprint(api_blueprint)
     logger.info("Swagger running on http://localhost:5000/prom")

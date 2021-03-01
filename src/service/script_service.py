@@ -10,7 +10,7 @@ def find_script(script_name):
 
 
 def find_all_scripts():
-    return [script for script in collection.find({}, {"name": True, "description": True})]
+    return [script for script in collection.find({}, {"source_code": False})]
 
 
 def remove_script(script_name):

@@ -8,28 +8,19 @@ from src.swagger import api
 ns = api.namespace("packages", description="Package Manager related operations")
 
 package_model = api.model('Package', {
-    'name': fields.List(fields.String(required=True, description='The package name')),
+    'packages': fields.List(fields.String(required=True, description='The package name')),
 })
 
 
 @ns.route('/')
 @ns.response(200, 'Success')
 @ns.response(404, 'Package not found')
-@ns.param('script_model-name', 'The script_model identifier')
 class PackageController(Resource):
 
     def get(self):
         """Get all packages"""
         try:
             outputs = list_packages()
-            return jsonify(outputs)
-        except Exception as e:
-            return str(e)
-
-    def put(self):
-        """Update a package given its identifier"""
-        try:
-            outputs = update_packages()
             return jsonify(outputs)
         except Exception as e:
             return str(e)
@@ -54,5 +45,18 @@ class PackageController(Resource):
             packages = body["packages"]
             remove_packages(packages)
             return 'OK'
+        except Exception as e:
+            return str(e)
+
+
+@ns.route('/update')
+@ns.response(200, 'Success')
+@ns.response(404, 'Package not found')
+class PackageUpdateController(Resource):
+    def post(self):
+        """Update all packages"""
+        try:
+            outputs = update_packages()
+            return jsonify(outputs)
         except Exception as e:
             return str(e)

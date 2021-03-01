@@ -30,7 +30,6 @@ command_model = api.model("Command", {
     'commands': fields.List(fields.String(required=True, description='Command')),
 })
 
-
 @ns.route('/commands')
 @ns.response(200, 'Success')
 @ns.response(404, 'Script not found')
