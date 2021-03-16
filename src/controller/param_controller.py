@@ -1,3 +1,5 @@
+import os
+
 from flask_restx import Resource, fields
 
 from src.service import param_service as service
@@ -49,10 +51,8 @@ class ParamsController(Resource):
         """Create a param given its identifier"""
         args = param_parser.parse_args()
 
-        data = args["data"]
-
         param = {"name": args["name"],
                  "description": args["description"],
-                 "type": args["type"],
-                 "data": data.read().decode("utf-8")}
+                 "type": os.path.splitext(args["data"].filename)[1],
+                 "data": args["data"].read().decode("utf-8")}
         return {"Param Id": service.insert_param(param)}

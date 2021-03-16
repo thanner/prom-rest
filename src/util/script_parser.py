@@ -31,4 +31,4 @@ script_parser.add_argument('source_code',
                            )
 
 script_parser.add_argument('params', type=param_parser, location='form', action='append',
-                           help='{"name": "@xesLog", "description": "Log received", "type": "xes"}', )
+                           help='{"name": "@xesLog", "description": "Log received", "expectedType": "xes"}', )

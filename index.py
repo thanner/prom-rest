@@ -7,7 +7,7 @@ from src.util import logger_utils
 
 app = Flask(__name__)
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/prom"
+app.config["MONGO_URI"] = "mongodb://prom-database:27017/prom"
 mongo = PyMongo(app)
 
 logger = logger_utils.get_logger()
@@ -23,7 +23,7 @@ def initialize_server():
     api.add_namespace(script_controller.ns)
     app.register_blueprint(api_blueprint)
     logger.info("Swagger running on http://localhost:5000/prom")
-    app.run()
+    app.run(host="0.0.0.0")
 
 
 if __name__ == '__main__' or __name__ == 'prom.app':

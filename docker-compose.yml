@@ -1,17 +1,19 @@
 version: "3.9"
 
 services:
-#  prom-database:
-  #    image: mongo
-  #    container_name: prom-database-container
-  #    ports:
-  #      - "27017:27017"
+  prom-database:
+    image: mongo
+    container_name: prom-database-container
+    ports:
+      - "27017:27017"
   prom-service:
-    image: prom-service-image
+    image: thannersoares/prom-service-image
     container_name: prom-service-container
     build: .
     ports:
       - "5000:5000"
-#    depends_on:
-#      - prom-database
+    links:
+      - prom-database
+    depends_on:
+      - prom-database
 

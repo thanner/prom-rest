@@ -1,10 +1,7 @@
-import os
-import tempfile
-
 from flask import request, jsonify
 from flask_restx import Resource, fields
 
-from src.service import script_service as service, param_service, prom_service
+from src.service import script_service as service
 from src.swagger import api
 from src.util import parser, script_parser
 from src.util.script_parser import script_parser
@@ -13,27 +10,34 @@ ns = api.namespace("scripts", description="Script related operations")
 
 param_model = api.model("param", {
     "name": fields.String(required=True, description="Param name"),
-    "description": fields.String(required=True, description="Param value"),
-    "type": fields.String(required=True, description="Param type"),
+    "description": fields.String(required=True, description="Param description"),
+    "expectedType": fields.String(required=True, description="Expected Param type"),
 })
 
 script_projection_model = api.model("script_projection", {
     "name": fields.String(required=True, description="The script unique identifier"),
     "description": fields.String(required=True, description="The script description"),
-    "params": fields.List(fields.Nested(param_model, skip_none=True)),
+    "var_params": fields.List(fields.Nested(param_model, skip_none=True)),
+    "file_params": fields.List(fields.Nested(param_model, skip_none=True)),
 })
 
 script_model = api.inherit("script", script_projection_model, {
     "source_code": fields.String(required=True, description="The source code"),
 })
 
-param_transformation_model = api.model('param_transformation', {
-    "name": fields.String(required=True, description="The param unique identifier"),
+var_param_transformation_model = api.model('var_param_transformation', {
     "placeholder": fields.String(required=True, description="The script's param placeholder"),
+    "value": fields.String(required=True, description="The param value"),
+})
+
+file_param_transformation_model = api.model('file_param_transformation', {
+    "placeholder": fields.String(required=True, description="The script's param placeholder"),
+    "file_param_id": fields.String(required=True, description="The file param unique identifier"),
 })
 
 param_transformations_model = api.model('param_transformations', {
-    "params": fields.List(fields.Nested(param_transformation_model, skip_none=True)),
+    "var_params": fields.List(fields.Nested(var_param_transformation_model, skip_none=True)),
+    "file_params": fields.List(fields.Nested(file_param_transformation_model, skip_none=True)),
 })
 
 
@@ -91,27 +95,9 @@ class ScriptExecutionController(Resource):
         """
         try:
             body = request.get_json()
-            params = body["params"]
-
-            param_files = []
-            for param in params:
-                param_name = param["name"]
-                param_base = param_service.find_param(param_name)
-                param_file_temp, param_filename_temp = tempfile.mkstemp(text=True,
-                                                                        suffix=os.path.splitext(param_name)[1])
-                with os.fdopen(param_file_temp, "w") as tmp:
-                    tmp.write(param_base["data"])
-                param_files.append({"name": param["placeholder"], "filename": param_filename_temp})
-
-            template_content = service.find_script(script_name)["source_code"]
-            for param_file in param_files:
-                template_content = template_content.replace(param_file["name"], param_file["filename"])
-            template_file, template_filename = tempfile.mkstemp(text=True, suffix=".txt")
-            with os.fdopen(template_file, "w") as tmp:
-                tmp.write(template_content)
-
-            command = f"-f {template_filename}"
-            outputs = prom_service.execute_command(command)
+            var_params = body["var_params"]
+            request_file_params = body["file_params"]
+            outputs = service.execute_script(script_name, var_params, request_file_params)
             return jsonify(outputs)
         except Exception as e:
             return str(e)
