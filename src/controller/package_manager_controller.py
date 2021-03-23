@@ -2,7 +2,7 @@ from flask import jsonify, request
 from flask_restx import Resource, fields
 
 from src.service.package_manager_service import list_packages, install_packages, update_packages, \
-    remove_packages
+    remove_packages, install_all_packages, package_manager_gui
 from src.swagger import api
 
 ns = api.namespace("packages", description="Package Manager related operations")
@@ -57,6 +57,32 @@ class PackageUpdateController(Resource):
         """Update all packages"""
         try:
             outputs = update_packages()
+            return jsonify(outputs)
+        except Exception as e:
+            return str(e)
+
+
+@ns.route('/install-all')
+@ns.response(200, 'Success')
+@ns.response(404, 'Package not found')
+class PackageFullInstallController(Resource):
+    def post(self):
+        """Install all packages"""
+        try:
+            outputs = install_all_packages()
+            return jsonify(outputs)
+        except Exception as e:
+            return str(e)
+
+
+@ns.route('/package-manager')
+@ns.response(200, 'Success')
+@ns.response(404, 'Package not found')
+class PackageManagerGUIController(Resource):
+    def post(self):
+        """Show package manager GUI"""
+        try:
+            outputs = package_manager_gui()
             return jsonify(outputs)
         except Exception as e:
             return str(e)
